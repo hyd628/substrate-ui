@@ -17,22 +17,26 @@ export class SecretItem extends ReactiveComponent {
 		let that = this
 		let toggle = () => {
 			let display = that.state.display
-			if (display !== 'seed') {
-				if (Math.random() < 0.1) {
-					display = 'phrase'
-				} else {
+			switch (display) {
+				case null:
 					display = 'seed'
-				}
-				window.setTimeout(() => that.setState({ display: null }), 5000)
-				that.setState({ display })
+					break
+				case 'seed':
+					if (Math.random() < 0.1) {
+						display = 'phrase'
+						break
+					}
+				default:
+					display = null
 			}
+			that.setState({ display })
 		}
 		return this.state.display === 'phrase'
 			? <Label
 				basic
 				icon='privacy'
 				onClick={toggle}
-				content='Seed phrase '
+				content='Seed phrase'
 				detail={this.props.phrase}
 			/>
 			: this.state.display === 'seed'
@@ -40,12 +44,12 @@ export class SecretItem extends ReactiveComponent {
 				basic
 				icon='key'
 				onClick={toggle}
-				content='Validator seed '
+				content='Validator seed'
 				detail={'0x' + bytesToHex(this.props.seed)}
 			/>
 			: <Popup trigger={<Icon
 				circular
-				className='eye slash'
+				name='eye slash'
 				onClick={toggle}
 			/>} content='Click to uncover seed/secret' />
 	}
